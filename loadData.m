@@ -60,3 +60,15 @@ end
 modulus = mod(length(RRintervals),128);
 b = RRintervals(1:length(RRintervals)-modulus);
 reshaped = reshape(b,128,[]);
+
+% Plot to check the data
+figure(1);
+plot(t, ekg)
+hold on
+plot(t(max_indices(2:length(max_indices))), ekg(max_indices(2:length(max_indices))), 'r.')
+
+figure(2);
+for i=1:size(reshaped, 2)
+    subplot(floor(sqrt(size(reshaped,2))), ceil(sqrt(size(reshaped,2))), i)
+    plot(reshaped(:,i));
+end
