@@ -10,11 +10,11 @@ clc
 close all
 % For test data list
 % 04126, 04043, 04048
-datapath = 'afdb/04043';
+datapath = 'afdb/04048';
 annot_datapath = strcat(['database/', datapath]);
 
 disp('Reading data from physionet ...');
-[t, Fs, ekg]=rdsamp(datapath,1,500000);
+[ekg, Fs, t]=rdsamp(datapath,1,500000);
 disp('Generating annotation ...');
 wqrs(annot_datapath);
 disp('Reading annotation ...');
