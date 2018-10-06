@@ -8,11 +8,20 @@
 clear
 clc
 close all
-datapath = 'afdb/04126';
-[t, ekg]=rdsamp(datapath,1,500000);
-wqrs(datapath);
-[ann,type,subtype,chan,num,comments] = rdann(datapath,'wqrs');
-[ann_atr,type_atr,subtype_atr,chan_atr,num_atr,comments_atr] = rdann(datapath,'atr');
+% For test data list
+% 04126, 04043, 04048
+datapath = 'afdb/04043';
+annot_datapath = strcat(['database/', datapath]);
+
+disp('Reading data from physionet ...');
+[t, Fs, ekg]=rdsamp(datapath,1,500000);
+disp('Generating annotation ...');
+wqrs(annot_datapath);
+disp('Reading annotation ...');
+[ann,type,subtype,chan,num,comments] = rdann(annot_datapath,'wqrs');
+disp('Reading another annotation ...');
+[ann_atr,type_atr,subtype_atr,chan_atr,num_atr,comments_atr] = rdann(annot_datapath,'atr');
+disp('Done!');
 
  max_indices = [0];
  

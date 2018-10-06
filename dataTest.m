@@ -39,7 +39,7 @@ end
 x=1:numberOfWindows(2);
 figure
 subplot(5,1,2),plot(detected),title('Detected AFIB');
-subplot(5,1,1),plot(ekg),title('EKG');
+subplot(5,1,1),plot(ekg, t),title('EKG');
 subplot(5,1,3),plot(x,tpr_ratio,x,thr_tpr),title('Turning Point Ratio');
 subplot(5,1,4),plot(x,se,x,thr_se),title('Shannon Entropy');
 subplot(5,1,5),plot(x,rmssd,x,thr_rmssd),title('Root mean squared of Successive Differences');
