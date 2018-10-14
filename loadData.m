@@ -40,7 +40,14 @@ for n = 1:length(ann)-1
 
     %Find the max value in between each qrs wave beginning index. This
     %number corresponds to the peak, aka the R
-    [maximum_val, maximum_idx] = max(ekg(ann(n):ann(n+1)));
+    start_idx = ann(n);
+    end_idx = ann(n+1);
+    
+    if start_idx < 1
+        start_idx = 1;
+    end
+    
+    [maximum_val, maximum_idx] = max(ekg(start_idx:end_idx));
     max_indices = [max_indices ann(n)+maximum_idx-1];
 end
 
