@@ -42,16 +42,28 @@ end
 %Plots
 x=1:numberOfWindows(2);
 plot_fig = figure;
-subplot(5,1,1),plot(t, ekg),title('EKG');
-subplot(5,1,2),plot(x, reshaped_truth, 'r.--');
-hold on;
-plot(x, detected, '.-'),title('Detected AFIB');
-legend('Ground truth', 'Detected');
-subplot(5,1,3),plot(x,tpr_ratio,x,thr_tpr),title('Turning Point Ratio');
-subplot(5,1,4),plot(x,se,x,thr_se),title('Shannon Entropy');
-subplot(5,1,5),plot(x,rmssd,x,thr_rmssd),title('Root mean squared of Successive Differences');
+subplot(6,1,1),plot(t, ekg),title('EKG');
+subplot(6,1,2),plot(x, detected, '.-'),title('Detected AFIB');
+subplot(6,1,3), plot(x, reshaped_truth, '.-'),title('Ground truth');
+subplot(6,1,4),plot(x,tpr_ratio,x,thr_tpr),title('Turning Point Ratio');
+subplot(6,1,5),plot(x,se,x,thr_se),title('Shannon Entropy');
+subplot(6,1,6),plot(x,rmssd,x,thr_rmssd),title('Root mean squared of Successive Differences');
 
 accuracy = sum(detected == reshaped_truth) / length(detected);
-suptitle([datapath, ' :: Accuracy : ', num2str(accuracy), '%']);
+
+
+tp = sum(detected(find(reshaped_truth == 1)) == 1) / length(detected(find(reshaped_truth == 1)));
+tn = sum(detected(find(reshaped_truth == 0)) == 0) / length(detected(find(reshaped_truth == 0)));
+
+fp = sum(detected(find(reshaped_truth == 1)) == 0) / length(detected(find(reshaped_truth == 1)));
+fn = sum(detected(find(reshaped_truth == 0)) == 1) / length(detected(find(reshaped_truth == 0)));
+% fn = sum(1-detect_result(find(reshaped_truth == 1))) / length(find(reshaped_truth == 1));
+
+precision = tp / (tp + fp);
+recall = tp / (tp + fn);
+
+
+suptitle([datapath, ' :: Accuracy : ', num2str(accuracy), '%, Precision : ', num2str(precision), '%, Recall : ', num2str(recall), '%']);
 plot_fig.PaperPosition = [0 0 50 30];
 saveas(plot_fig, strcat('screenshot/', datapath, '.png'))
+
