@@ -15,36 +15,38 @@ tpr_ratio = zeros(1,numberOfWindows(2));
 se = zeros(1,numberOfWindows(2));
 rmssd = zeros(1,numberOfWindows(2));
  
- 
- 
 thr_tpr(1:numberOfWindows(2)) = .54;
 thr_se(1:numberOfWindows(2)) = .7;
 thr_rmssd(1:numberOfWindows(2)) = .1*mean(RRintervals);
 detected = zeros(1,numberOfWindows(2));
  
 for i = 1:numberOfWindows(2)
-window = reshaped(:,i);
-[tpr_expected(i),tpr_actual(i),tpr_sigma_expected(i),tpr_sigma_real(i)] = turningPointRatio(window);
-se(i) = shannonEntropy(window);
-rmssd(i) = rootMeanSquareSuccessiveDifferences(window);
-tpr_ratio(i) = tpr_actual(i) / (128-16-2);
+    window = reshaped(:,i);
+    [tpr_expected(i),tpr_actual(i),tpr_sigma_expected(i),tpr_sigma_real(i)] = turningPointRatio(window);
+    se(i) = shannonEntropy(window);
+    rmssd(i) = rootMeanSquareSuccessiveDifferences(window);
+    tpr_ratio(i) = tpr_actual(i) / (128-16-2);
 
-detect_value = ((tpr_ratio(i) > thr_tpr(i)) + (se(i)> thr_se(i)) + (rmssd(i) > thr_rmssd(i)));
+    detect_value = ((tpr_ratio(i) > thr_tpr(i)) + (se(i)> thr_se(i)) + (rmssd(i) > thr_rmssd(i)));
 
-if detect_value >= 3
-	detected(i) = 1;
+    if detect_value >= 3
+        detected(i) = 1;
+    end
 end
-end
- 
- 
  
 %Plots
 x=1:numberOfWindows(2);
-figure
+plot_fig = figure;
 subplot(5,1,1),plot(t, ekg),title('EKG');
-subplot(5,1,2),plot(x, detected),title('Detected AFIB');
+subplot(5,1,2),plot(x, reshaped_truth, 'r.--');
+hold on;
+plot(x, detected, '.-'),title('Detected AFIB');
+legend('Ground truth', 'Detected');
 subplot(5,1,3),plot(x,tpr_ratio,x,thr_tpr),title('Turning Point Ratio');
 subplot(5,1,4),plot(x,se,x,thr_se),title('Shannon Entropy');
 subplot(5,1,5),plot(x,rmssd,x,thr_rmssd),title('Root mean squared of Successive Differences');
 
-
+accuracy = sum(detected == reshaped_truth) / length(detected);
+suptitle([datapath, ' :: Accuracy : ', num2str(accuracy), '%']);
+plot_fig.PaperPosition = [0 0 50 30];
+saveas(plot_fig, strcat('screenshot/', datapath, '.png'))
