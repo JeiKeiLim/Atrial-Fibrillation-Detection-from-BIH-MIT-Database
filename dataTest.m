@@ -14,11 +14,16 @@ tpr_sigma_real = zeros(1,numberOfWindows(2));
 tpr_ratio = zeros(1,numberOfWindows(2));
 se = zeros(1,numberOfWindows(2));
 rmssd = zeros(1,numberOfWindows(2));
- 
-thr_tpr(1:numberOfWindows(2)) = .54;
-thr_se(1:numberOfWindows(2)) = .7;
-thr_rmssd(1:numberOfWindows(2)) = .1*mean(RRintervals);
-detected = zeros(1,numberOfWindows(2));
+
+thr_tpr = zeros(numberOfWindows(2), 1);
+thr_se = zeros(numberOfWindows(2), 1);
+thr_rmssd = zeros(numberOfWindows(2), 1);
+detected = zeros(1, numberOfWindows(2));
+
+thr_tpr(:) = .54;
+thr_se(:) = .7;
+thr_rmssd(:) = .1*mean(RRintervals);
+
  
 for i = 1:numberOfWindows(2)
     window = reshaped(:,i);
