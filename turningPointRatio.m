@@ -6,7 +6,7 @@
  
 function [u_tp_expected, u_tp_actual, sigma_tp_expected, sigma_tp_real] = turningPointRatio (qrs_signal)
 	%Initialize vector for turning points
-	qrs_length = 128
+	qrs_length = 128;
 	tp = zeros (1,qrs_length);
 	
 	%Find turning points

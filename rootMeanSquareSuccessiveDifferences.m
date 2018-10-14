@@ -22,7 +22,7 @@ function [rmssd] = rootMeanSquareSuccessiveDifferences (signal)
 	%Remove outliers
 	signal_minus_outliers (find (signal_minus_outliers == 0)) = [];
 	
-	signal_length = length (signal_minus_outliers)
+	signal_length = length (signal_minus_outliers);
  
 	%Initialize rmssd
 	rmssd = 0;

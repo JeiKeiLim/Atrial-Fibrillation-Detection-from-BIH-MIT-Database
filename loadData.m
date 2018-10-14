@@ -9,8 +9,10 @@ clear
 clc
 close all
 % For test data list
-% 04126, 04043, 04048
-datapath = 'afdb/04048';
+% 04015, 04043, 04048, 04126, 04746, 04908, 04936, 05091, 
+% 05121, 05261, 06426, 06453, 06995, 07162, 07859, 07879, 
+% 07910, 08215, 08219, 08378, 08405, 08434, 08455
+datapath = 'afdb/08455';
 annot_datapath = strcat(['database/', datapath]);
 
 disp('Reading data from physionet ...');
@@ -25,33 +27,27 @@ disp('Done!');
 
  max_indices = [0];
  
-	%ann is a vector of the index of the start of each QRS wave
-	%Loop through ann
-	for n = 1:length(ann)
-    	%If ann contains an index beyond the number of samples pulled from the
-    	%database, we finished
-    	if (ann(n) > length(ekg)) || (ann(n+1) > length(ekg)) == 1
-        	break;
-    	end
- 
-    	%Find the max value in between each qrs wave beginning index. This
-    	%number corresponds to the peak, aka the R
-    	maximum_val = max(ekg(ann(n):ann(n+1)));
-    	for k = ann(n):ann(n+1)
-        	if ekg(k) == maximum_val
-            	%Collecting the indices of the peaks
-         	   max_indices = [max_indices k];
-            	continue;
-        	end
-    	end
-	end
-	
-    	r_peaks = zeros (length (max_indices), 1);
- 
-	%Get the amplitude of the original signal at each max value index
-	for m = 2:length (max_indices)
-    	r_peaks (m) = ekg (max_indices (m));
-	end
+%ann is a vector of the index of the start of each QRS wave
+%Loop through ann
+for n = 1:length(ann)
+    %If ann contains an index beyond the number of samples pulled from the
+    %database, we finished
+    if (ann(n) > length(ekg)) || (ann(n+1) > length(ekg)) == 1
+        break;
+    end
+
+    %Find the max value in between each qrs wave beginning index. This
+    %number corresponds to the peak, aka the R
+    [maximum_val, maximum_idx] = max(ekg(ann(n):ann(n+1)));
+    max_indices = [max_indices ann(n)+maximum_idx-1];
+end
+
+r_peaks = zeros (length (max_indices), 1);
+
+%Get the amplitude of the original signal at each max value index
+for m = 2:length (max_indices)
+    r_peaks (m) = ekg (max_indices (m));
+end
 	
 RRintervals = zeros(1,length(max_indices)-1);
 for i=1:length(max_indices)-1
@@ -69,6 +65,8 @@ plot(t(max_indices(2:length(max_indices))), ekg(max_indices(2:length(max_indices
 
 figure(2);
 for i=1:size(reshaped, 2)
-    subplot(floor(sqrt(size(reshaped,2))), ceil(sqrt(size(reshaped,2))), i)
+    subplot(ceil(sqrt(size(reshaped,2))), ceil(sqrt(size(reshaped,2))), i)
     plot(reshaped(:,i));
 end
+
+dataTest

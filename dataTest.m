@@ -4,8 +4,8 @@
 %EECE 5664
 %Noah Goldstein, Dan Song, Dan Thompson
  
-close all
-numberOfWindows = (size(reshaped))
+% close all
+numberOfWindows = (size(reshaped));
  
 tpr_expected = zeros(1,numberOfWindows(2));
 tpr_actual = zeros(1,numberOfWindows(2));
@@ -20,7 +20,7 @@ rmssd = zeros(1,numberOfWindows(2));
 thr_tpr(1:numberOfWindows(2)) = .54;
 thr_se(1:numberOfWindows(2)) = .7;
 thr_rmssd(1:numberOfWindows(2)) = .1*mean(RRintervals);
-detected = zeros(1,28);
+detected = zeros(1,numberOfWindows(2));
  
 for i = 1:numberOfWindows(2)
 window = reshaped(:,i);
@@ -28,7 +28,10 @@ window = reshaped(:,i);
 se(i) = shannonEntropy(window);
 rmssd(i) = rootMeanSquareSuccessiveDifferences(window);
 tpr_ratio(i) = tpr_actual(i) / (128-16-2);
-if (tpr_ratio(i) > thr_tpr(i)) & (se(i)> thr_se(i)) & (rmssd(i) > thr_rmssd)
+
+detect_value = ((tpr_ratio(i) > thr_tpr(i)) + (se(i)> thr_se(i)) + (rmssd(i) > thr_rmssd(i)));
+
+if detect_value >= 3
 	detected(i) = 1;
 end
 end
@@ -38,8 +41,8 @@ end
 %Plots
 x=1:numberOfWindows(2);
 figure
-subplot(5,1,2),plot(detected),title('Detected AFIB');
 subplot(5,1,1),plot(t, ekg),title('EKG');
+subplot(5,1,2),plot(x, detected),title('Detected AFIB');
 subplot(5,1,3),plot(x,tpr_ratio,x,thr_tpr),title('Turning Point Ratio');
 subplot(5,1,4),plot(x,se,x,thr_se),title('Shannon Entropy');
 subplot(5,1,5),plot(x,rmssd,x,thr_rmssd),title('Root mean squared of Successive Differences');
