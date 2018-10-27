@@ -20,10 +20,12 @@ thr_se = zeros(numberOfWindows(2), 1);
 thr_rmssd = zeros(numberOfWindows(2), 1);
 detected = zeros(1, numberOfWindows(2));
 
-thr_tpr(:) = .54;
-thr_se(:) = .7;
-thr_rmssd(:) = .1*mean(RRintervals);
-
+% thr_tpr(:) = .54;
+% thr_se(:) = .7;
+% thr_rmssd(:) = .1*mean(RRintervals);
+thr_tpr(:) = THR_TPR;
+thr_se(:) = THR_SE;
+thr_rmssd(:) = THR_RMSSD*mean(RRintervals);
  
 for i = 1:numberOfWindows(2)
     window = reshaped(:,i);
@@ -65,5 +67,9 @@ recall = tp / (tp + fn);
 
 suptitle([datapath, ' :: Accuracy : ', num2str(accuracy), '%, Precision : ', num2str(precision), '%, Recall : ', num2str(recall), '%']);
 plot_fig.PaperPosition = [0 0 50 30];
-saveas(plot_fig, strcat('screenshot/', datapath, '.png'))
+
+save_path = strcat('screenshot/', num2str(THR_TPR), '_', num2str(THR_SE), '_', num2str(THR_RMSSD));
+mkdir( strcat(save_path, '/afdb' ));
+
+saveas(plot_fig, strcat(save_path,'/', datapath, '.png'))
 
