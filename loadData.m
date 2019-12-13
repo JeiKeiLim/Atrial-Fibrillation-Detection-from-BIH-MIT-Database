@@ -4,6 +4,9 @@
 %EECE 5664
 %Noah Goldstein, Dan Song, Dan Thompson
 
+%Modified by Jongkuk Lim (iron.drum.nation@gmail.com)
+%2018. 10. 28
+
 READ_DATA = 1;
 
 clc
@@ -13,7 +16,7 @@ close all
 % 05121, 05261, 06426, 06453, 06995, 07162, 07859, 07879, 
 % 07910, 08215, 08219, 08378, 08405, 08434, 08455
 if READ_DATA
-%     datapath = 'afdb/04043';
+    datapath = 'afdb/04043';
     annot_datapath = strcat(['database/', datapath]);
 
     disp('Reading data from physionet ...');
@@ -80,15 +83,18 @@ reshaped_truth = reshape(ground_truth, 128, []);
 reshaped_truth = sum(reshaped_truth) > (128/2);
 
 % Plot to check the data
-% figure(1);
-% plot(t, ekg)
-% hold on
-% plot(t(max_indices), ekg(max_indices), 'r.')
+I_DO_NOT_RECOMMEND_THIS = 0;
+% Set this value to 1 if your computer can handle plotting more than 100 subplots.
 
-% figure(2);
-% for i=1:size(reshaped, 2)
-%     subplot(ceil(sqrt(size(reshaped,2))), ceil(sqrt(size(reshaped,2))), i)
-%     plot(reshaped(:,i));
-% end
+if I_DO_NOT_RECOMMEND_THIS
+    figure(1);
+    plot(t, ekg)
+    hold on
+    plot(t(max_indices), ekg(max_indices), 'r.')
 
-dataTest
+    figure(2);
+    for i=1:size(reshaped, 2)
+        subplot(ceil(sqrt(size(reshaped,2))), ceil(sqrt(size(reshaped,2))), i)
+        plot(reshaped(:,i));
+    end
+end

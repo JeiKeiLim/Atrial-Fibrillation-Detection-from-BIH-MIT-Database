@@ -20,9 +20,10 @@ thr_se = zeros(numberOfWindows(2), 1);
 thr_rmssd = zeros(numberOfWindows(2), 1);
 detected = zeros(1, numberOfWindows(2));
 
-% thr_tpr(:) = .54;
-% thr_se(:) = .7;
-% thr_rmssd(:) = .1*mean(RRintervals);
+THR_TPR = .65;
+THR_SE = .9;
+THR_RMSSD = .1;
+
 thr_tpr(:) = THR_TPR;
 thr_se(:) = THR_SE;
 thr_rmssd(:) = THR_RMSSD*mean(RRintervals);
@@ -59,7 +60,6 @@ tn = sum(detected(find(reshaped_truth == 0)) == 0) / length(detected(find(reshap
 
 fp = sum(detected(find(reshaped_truth == 1)) == 0) / length(detected(find(reshaped_truth == 1)));
 fn = sum(detected(find(reshaped_truth == 0)) == 1) / length(detected(find(reshaped_truth == 0)));
-% fn = sum(1-detect_result(find(reshaped_truth == 1))) / length(find(reshaped_truth == 1));
 
 precision = tp / (tp + fp);
 recall = tp / (tp + fn);
